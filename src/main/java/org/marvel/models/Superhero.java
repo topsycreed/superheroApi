@@ -1,4 +1,4 @@
-package models;
+package org.marvel.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -3,7 +3,9 @@ import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import models.Superhero;
+import org.marvel.Constants;
+import org.marvel.controllers.SuperheroController;
+import org.marvel.models.Superhero;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
@@ -11,13 +13,13 @@ import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static testdata.TestConstants.DEFAULT_HERO;
-import static testdata.TestConstants.UPDATED_HERO;
+import static org.marvel.testdata.TestConstants.DEFAULT_HERO;
+import static org.marvel.testdata.TestConstants.UPDATED_HERO;
 
-public class NewTest {
+class NewTest {
 
     @Test
-    public void checkGetHeroContentTypeTest() {
+    void checkGetHeroContentTypeTest() {
         RestAssured.defaultParser = Parser.JSON;
         RequestSpecification requestSpecification = given();
         requestSpecification.accept(ContentType.ANY).baseUri(Constants.BASE_URL);
@@ -30,25 +32,10 @@ public class NewTest {
     }
 
     @Test
-    public void addHeroTest() {
-        RestAssured.defaultParser = Parser.JSON;
-        RequestSpecification requestSpecification = given();
-        requestSpecification.contentType(ContentType.JSON);
-        requestSpecification.baseUri(Constants.BASE_URL);
-        requestSpecification.body("{\n" +
-                "    \"id\": 1,\n" +
-                "    \"fullName\": \"Gena Chursov\",\n" +
-                "    \"birthDate\": \"2022-02-21\",\n" +
-                "    \"city\": \"New York\",\n" +
-                "    \"mainSkill\": \"Magic\",\n" +
-                "    \"gender\": \"M\",\n" +
-                "    \"phone\": null\n" +
-                "  }");
-        Response response = given(requestSpecification).post("superheroes").andReturn();
-        String bodyStr = response.asPrettyString();
+    void addHeroTest() {
+        Response response = new SuperheroController().addHero();
         Superhero actualHero = response.as(Superhero.class);
-        System.out.println(bodyStr);
-        System.out.println("Id = " + actualHero.id);
+
         assertEquals(DEFAULT_HERO, actualHero);
         assertEquals(200, response.statusCode());
     }
@@ -56,7 +43,7 @@ public class NewTest {
     @Disabled("Just example")
     @RepeatedTest(value = 5, name = "{displayName} - повторение {currentRepetition} из {totalRepetitions}")
     @DisplayName("Check getSuperhero by id")
-    public void getHeroByIdHardcodedTest() {
+    void getHeroByIdHardcodedTest() {
         RestAssured.defaultParser = Parser.JSON;
         RequestSpecification requestSpecification = given();
         requestSpecification.contentType(ContentType.JSON);
@@ -73,28 +60,22 @@ public class NewTest {
 
     @RepeatedTest(value = 5, name = "{displayName} - повторение {currentRepetition} из {totalRepetitions}")
     @DisplayName("Check getSuperhero by id")
-    public void getHeroByIdTest() {
+    void getHeroByIdTest() {
         Response addHeroResponse = createDefaultHero();
         Superhero createdHero = addHeroResponse.as(Superhero.class);
         int id = createdHero.getId();
 
-        RestAssured.defaultParser = Parser.JSON;
-        RequestSpecification requestSpecification = given();
-        requestSpecification.contentType(ContentType.JSON);
-        requestSpecification.baseUri(Constants.BASE_URL);
-        Response response = given(requestSpecification).get(String.format("superheroes/%s", id)).andReturn();
-        String bodyStr = response.asPrettyString();
-        System.out.println(bodyStr);
+        Response response = new SuperheroController().getHeroById(id);
         Superhero actualHero = response.as(Superhero.class);
+
         assertEquals(DEFAULT_HERO, actualHero);
-        assertEquals(id, actualHero.getId());
         assertEquals(200, response.statusCode());
     }
 
 //    @RepeatedTest(value = 5, name = "{displayName} - повторение {currentRepetition} из {totalRepetitions}")
 //    @DisplayName("Check getSuperhero by id")
     @Test
-    public void updateHeroByIdTest() {
+    void updateHeroByIdTest() {
         Response addHeroResponse = createDefaultHero();
         Superhero createdHero = addHeroResponse.as(Superhero.class);
         int id = createdHero.getId();
@@ -103,15 +84,16 @@ public class NewTest {
         RequestSpecification requestSpecification = given();
         requestSpecification.contentType(ContentType.JSON);
         requestSpecification.baseUri(Constants.BASE_URL);
-        requestSpecification.body("{\n" +
-                "    \"id\": 1,\n" +
-                "    \"fullName\": \"Kirill Java AQA\",\n" +
-                "    \"birthDate\": \"2022-02-21\",\n" +
-                "    \"city\": \"New York\",\n" +
-                "    \"mainSkill\": \"Magic\",\n" +
-                "    \"gender\": \"M\",\n" +
-                "    \"phone\": null\n" +
-                "  }");
+        requestSpecification.body("""
+                {
+                    "id": 1,
+                    "fullName": "Kirill Java AQA",
+                    "birthDate": "2022-02-21",
+                    "city": "New York",
+                    "mainSkill": "Magic",
+                    "gender": "M",
+                    "phone": null
+                  }""");
         Response response = given(requestSpecification).put(String.format("superheroes/%s", id)).andReturn();
         String bodyStr = response.asPrettyString();
         System.out.println(bodyStr);
@@ -124,7 +106,7 @@ public class NewTest {
     }
 
     @Test
-    public void deleteHeroByIdTest() {
+    void deleteHeroByIdTest() {
         Response addHeroResponse = createDefaultHero();
         Superhero createdHero = addHeroResponse.as(Superhero.class);
         int id = createdHero.getId();
@@ -151,15 +133,16 @@ public class NewTest {
         RequestSpecification requestSpecification = given();
         requestSpecification.contentType(ContentType.JSON);
         requestSpecification.baseUri(Constants.BASE_URL);
-        requestSpecification.body("{\n" +
-                "    \"id\": 1,\n" +
-                "    \"fullName\": \"Gena Chursov\",\n" +
-                "    \"birthDate\": \"2022-02-21\",\n" +
-                "    \"city\": \"New York\",\n" +
-                "    \"mainSkill\": \"Magic\",\n" +
-                "    \"gender\": \"M\",\n" +
-                "    \"phone\": null\n" +
-                "  }");
+        requestSpecification.body("""
+                {
+                    "id": 1,
+                    "fullName": "Gena Chursov",
+                    "birthDate": "2022-02-21",
+                    "city": "New York",
+                    "mainSkill": "Magic",
+                    "gender": "M",
+                    "phone": null
+                  }""");
         return given(requestSpecification).post("superheroes").andReturn();
     }
 }
