@@ -4,12 +4,13 @@ import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.marvel.Constants;
-import org.marvel.controllers.SuperheroController;
+import controller.SuperheroController;
 import org.marvel.models.Superhero;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
+import org.marvel.models.SuperheroError;
 
 import static io.restassured.RestAssured.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -118,6 +119,17 @@ class NewTest {
         Response response = given(requestSpecification).delete(String.format("superheroes/%s", id)).andReturn();
         System.out.println(response.asPrettyString());
         assertEquals(200, response.statusCode());
+    }
+
+    @Test
+    void invalidGetHeroTest() {
+        Response response = new SuperheroController().getHeroByInvalidId();
+        assertEquals(response.statusCode(), 400);
+        SuperheroError parsedResponse = response.as(SuperheroError.class);
+        assertEquals(parsedResponse.code, "NOT_FOUND");
+        assertEquals(parsedResponse.message, "Superhero with id '-1' was not found");
+        System.out.println(response.statusCode());
+        response.prettyPrint();
     }
 
     private Response getHeroById(int id) {

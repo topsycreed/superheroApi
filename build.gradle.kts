@@ -21,9 +21,8 @@ dependencies {
     testCompileOnly("org.projectlombok:lombok:1.18.30")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
     testImplementation("io.qameta.allure:allure-junit5:2.25.0")
-//    testImplementation("org.projectlombok:lombok:1.18.28")
-//    annotationProcessor("org.projectlombok:lombok:1.18.28")
-////    testAnnotationProcessor("org.projectlombok:lombok")
+    implementation("org.apache.httpcomponents:httpclient:4.5.14")
+    testImplementation("org.assertj:assertj-core:3.25.3")
 }
 
 tasks.test {

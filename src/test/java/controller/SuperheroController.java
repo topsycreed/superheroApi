@@ -1,4 +1,4 @@
-package org.marvel.controllers;
+package controller;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -16,16 +16,21 @@ public class SuperheroController {
 
     public SuperheroController() {
         RestAssured.defaultParser = Parser.JSON;
-        requestSpecification.contentType(ContentType.JSON);
-        requestSpecification.baseUri(Constants.BASE_URL);
-        requestSpecification.body(DEFAULT_HERO);
+        this.requestSpecification.contentType(ContentType.JSON);
+        this.requestSpecification.baseUri(Constants.BASE_URL);
     }
 
     public Response addHero() {
-        return given(requestSpecification).post("superheroes").andReturn();
+        this.requestSpecification.body(DEFAULT_HERO);
+        return given(this.requestSpecification).post("superheroes").andReturn();
     }
 
     public Response getHeroById(int id) {
-        return given(requestSpecification).get(String.format("superheroes/%s", id)).andReturn();
+        return given(this.requestSpecification).get(String.format("superheroes/%s", id)).andReturn();
+    }
+
+    public Response getHeroByInvalidId() {
+        int invalidId = -1;
+        return this.getHeroById(invalidId);
     }
 }
