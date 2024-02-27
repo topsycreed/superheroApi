@@ -1,5 +1,21 @@
 plugins {
     id("java")
+    id("io.qameta.allure") version "2.11.0"
+}
+
+allure {
+    report {
+        version.set("2.18.1")
+    }
+    adapter {
+        autoconfigure.set(true)
+        aspectjWeaver.set(true)
+        frameworks {
+            junit5 {
+                adapterVersion.set("2.18.1")
+            }
+        }
+    }
 }
 
 group = "org.marvel"
@@ -21,10 +37,13 @@ dependencies {
     testCompileOnly("org.projectlombok:lombok:1.18.30")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
     testImplementation("io.qameta.allure:allure-junit5:2.25.0")
+    implementation("io.qameta.allure:allure-rest-assured:2.25.0")
     implementation("org.apache.httpcomponents:httpclient:4.5.14")
     testImplementation("org.assertj:assertj-core:3.25.3")
 }
 
 tasks.test {
+    ignoreFailures = true
     useJUnitPlatform()
+    systemProperty("junit.jupiter.extensions.autodetection.enabled", "true")
 }

@@ -1,5 +1,6 @@
 package controller;
 
+import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
@@ -20,6 +21,7 @@ public class SuperheroController {
         this.requestSpecification.baseUri(Constants.BASE_URL);
     }
 
+    @Step("Add default hero")
     public Response addHero() {
         this.requestSpecification.body(DEFAULT_HERO);
         return given(this.requestSpecification).post("superheroes").andReturn();

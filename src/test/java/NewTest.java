@@ -1,3 +1,4 @@
+import io.qameta.allure.Description;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
@@ -33,6 +34,7 @@ class NewTest {
     }
 
     @Test
+    @Description("Add hero test")
     void addHeroTest() {
         Response response = new SuperheroController().addHero();
         Superhero actualHero = response.as(Superhero.class);

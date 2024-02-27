@@ -1,5 +1,7 @@
 package controller;
 
+import io.qameta.allure.Step;
+import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
@@ -17,8 +19,10 @@ public class SimpleController {
         RestAssured.defaultParser = Parser.JSON;
         this.requestSpecification.contentType(ContentType.JSON);
         this.requestSpecification.baseUri(Constants.BASE_URL);
+        this.requestSpecification.filter(new AllureRestAssured());
     }
 
+    @Step("Create default superhero")
     public HttpResponse addHero() {
         this.requestSpecification.body(DEFAULT_HERO);
         return new HttpResponse(given(requestSpecification)
@@ -26,6 +30,7 @@ public class SimpleController {
                 .then());
     }
 
+    @Step("Delete default superhero")
     public HttpResponse updateHeroById(int id) {
         this.requestSpecification.body(UPDATED_HERO);
         return new HttpResponse(given(requestSpecification)
