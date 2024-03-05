@@ -42,3 +42,6 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+###Secure properties###
+src/test/resources/test.properties
