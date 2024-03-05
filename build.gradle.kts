@@ -40,10 +40,12 @@ dependencies {
     implementation("io.qameta.allure:allure-rest-assured:2.25.0")
     implementation("org.apache.httpcomponents:httpclient:4.5.14")
     testImplementation("org.assertj:assertj-core:3.25.3")
+    implementation("org.aeonbits.owner:owner:1.0.12")
 }
 
 tasks.test {
     ignoreFailures = true
     useJUnitPlatform()
     systemProperty("junit.jupiter.extensions.autodetection.enabled", "true")
+    systemProperties(System.getProperties().mapKeys { it.key as String })
 }

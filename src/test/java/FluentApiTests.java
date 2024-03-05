@@ -6,6 +6,7 @@ import controller.SimpleController;
 import org.marvel.models.Superhero;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.marvel.testdata.TestConstants.DEFAULT_HERO;
 
 class FluentApiTests {
